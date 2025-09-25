@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, Query
-from src.core.models import BuildingCreate, BuildingResponse, EmissionCalculationRequest
+from src.core.models import BuildingComponentUpdate, BuildingCreate, BuildingResponse, EmissionCalculationRequest
 from src.services.building_service import BuildingService
 from typing import Optional
 
@@ -51,7 +51,7 @@ async def get_building(building_id: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to retrieve building: {str(e)}")
 
-@router.post("/{building_id}/components/{component_id}")
+@router.post("/{building_id}/components/{component_id}", response_model=dict)
 async def add_component_to_building(building_id: str, component_id: str, quantity: int = 1):
     """Add a component to a building"""
     try:
@@ -60,7 +60,7 @@ async def add_component_to_building(building_id: str, component_id: str, quantit
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@router.get("/{building_id}/components")
+@router.get("/{building_id}/components", response_model=dict)
 async def get_building_components(building_id: str):
     """Get all components for a building"""
     try:
@@ -72,11 +72,12 @@ async def get_building_components(building_id: str):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@router.put("/{building_id}/components/{component_id}")
-async def update_component_quantity(building_id: str, component_id: str, quantity: int):
+@router.put("/{building_id}/components/{component_id}", response_model=dict)
+async def update_component_quantity(building_id: str, component_id: str, update: BuildingComponentUpdate):
+    print(f"Updating component quantity in route for building {building_id} and component {component_id} to {update.quantity}")
     """Update the quantity of a component in a building"""
     try:
-        result = building_service.update_component_quantity(building_id, component_id, quantity)
+        result = building_service.update_component_quantity(building_id, component_id, update.quantity)
         return {"message": "Component quantity updated", "data": result}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))

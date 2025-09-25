@@ -1,6 +1,6 @@
 
 from typing import List, Dict, Any
-from src.data.repositories import BuildingRepository, BuildingResponse, ComponentRepository, ComponentsByBuildingRepository
+from src.data.repositories import BuildingRepository, BuildingResponse, BuildingComponentResponse, BuildingComponentUpdateResponse, ComponentRepository, ComponentsByBuildingRepository
 from src.core.building import Building
 from src.core.factory import ComponentFactory
 from src.core.models import BuildingComponentLink
@@ -39,7 +39,8 @@ class BuildingService:
         """Add a component to an existing building"""
         return self.components_by_building_repo.add_component_to_building(building_id, component_id, quantity)
     
-    def update_component_quantity(self, building_id: str, component_id: str, quantity: int) -> BuildingResponse:
+    def update_component_quantity(self, building_id: str, component_id: str, quantity: int) -> BuildingComponentUpdateResponse:
+        print(f"Updating component quantity in service for building {building_id} and component {component_id} to {quantity}")
         """Update the quantity of a component in a building"""
         return self.components_by_building_repo.update_component_quantity(building_id, component_id, quantity)
 

@@ -1,4 +1,3 @@
-# src/api/routes/components.py
 from fastapi import APIRouter, HTTPException, Query
 from typing import List, Optional
 from src.core.models import (
@@ -34,13 +33,10 @@ async def create_component(component: ComponentCreate):
 @router.get("/", response_model=dict)
 async def get_components(
     component_type: Optional[ComponentType] = Query(None, description="Filter by component type"),
-    search: Optional[str] = Query(None, description="Search in component names and metadata")
 ):
-    """Get all components, with optional filtering and search"""
+    """Get all components, with optional filtering"""
     try:
-        if search:
-            components = component_service.search_components(search, component_type)
-        elif component_type:
+        if component_type:
             components = component_service.get_components_by_type(component_type)
         else:
             components = component_service.get_all_components()
@@ -53,7 +49,7 @@ async def get_components(
         raise HTTPException(status_code=500, detail=f"Failed to retrieve components: {str(e)}")
 
 @router.get("/{component_id}", response_model=dict)
-async def get_component(component_id: int):
+async def get_component(component_id: str):
     """Get a specific component by ID"""
     try:
         component = component_service.get_component(component_id)
@@ -67,7 +63,7 @@ async def get_component(component_id: int):
         raise HTTPException(status_code=500, detail=f"Failed to retrieve component: {str(e)}")
 
 @router.put("/{component_id}", response_model=dict)
-async def update_component(component_id: int, updates: ComponentUpdate):
+async def update_component(component_id: str, updates: ComponentUpdate):
     """Update a component's properties"""
     try:
         result = component_service.update_component(component_id, updates.dict(exclude_unset=True))
@@ -81,7 +77,7 @@ async def update_component(component_id: int, updates: ComponentUpdate):
         raise HTTPException(status_code=500, detail=f"Failed to update component: {str(e)}")
 
 @router.delete("/{component_id}", response_model=dict)
-async def delete_component(component_id: int):
+async def delete_component(component_id: str):
     """Delete a component"""
     try:
         success = component_service.delete_component(component_id)
@@ -96,7 +92,7 @@ async def delete_component(component_id: int):
 
 @router.post("/{component_id}/calculate", response_model=dict)
 async def calculate_component_emissions(
-    component_id: int, 
+    component_id: str, 
     quantity: int = Query(1, description="Quantity of the component to calculate emissions for")
 ):
     """Calculate emissions for a specific component"""

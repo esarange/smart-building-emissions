@@ -39,6 +39,9 @@ class DatabaseHandler:
 
     def insert(self, table: str, data: dict) -> dict:
         return self.get().table(table).insert(data).execute().data[0]
+
+    def insert_many(self, table: str, data: list[dict]) -> list[dict]:
+        return self.get().table(table).insert(data).execute().data
     
     def select(self, table: str, filters: dict = None) -> list:
         query = self.get().table(table).select('*')
@@ -47,8 +50,8 @@ class DatabaseHandler:
                 query = query.eq(key, value)
         return query.execute().data
     
-    def update(self, table: str, id: int, data: dict) -> dict:
+    def update(self, table: str, id: str, data: dict) -> dict:
         return self.get().table(table).update(data).eq('id', id).execute().data[0]
     
-    def delete(self, table: str, id: int) -> dict:
+    def delete(self, table: str, id: str) -> dict:
         return self.get().table(table).delete().eq('id', id).execute().data[0]

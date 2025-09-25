@@ -22,14 +22,14 @@ class ComponentUpdate(BaseModel):
     metadata: Optional[Dict[str, Any]] = None
 
 class ComponentResponse(ComponentBase):
-    id: int
+    id: str
     created_at: datetime
 
     class Config:
         from_attributes = True
 
 class ComponentCalculationRequest(BaseModel):
-    component_id: int
+    component_id: str
     quantity: int = 1
 
 class BatchCalculationRequest(BaseModel):
@@ -48,8 +48,16 @@ class BuildingCreate(BaseModel):
     location: Optional[str] = None
     components: List[BuildingComponentLink] = []
 
-class BuildingComponentResponse(ComponentResponse):
+class BuildingComponentResponse(BaseModel):
+    component: ComponentResponse
     quantity: int 
+
+class BuildingComponentUpdate(BaseModel):
+    quantity: int
+
+class BuildingComponentUpdateResponse(BaseModel):
+    component: ComponentResponse
+    quantity: int
 
 class BuildingResponse(BuildingBase):
     id: str

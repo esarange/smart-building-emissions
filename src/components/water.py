@@ -1,18 +1,25 @@
 from .base import Component
 from typing import Dict, Any
+from pydantic import BaseModel
+from src.services.emission_factor_service import EmissionFactorService
+from src.core.models import EmissionFactorCategory
+
+class WaterMetadata(BaseModel):
+    annual_consumption_liters: float
+    water_treatment_factor: float
 
 class WaterComponent(Component):
     """Component for water consumption and treatment systems"""
     
-    def __init__(self, name: str, annual_consumption_liters: float, 
-                 water_treatment_factor: float = 1.0, **kwargs):
+    def __init__(self, name: str, metadata: WaterMetadata, **kwargs):
         super().__init__(name, "water")
         self.parameters = {
-            'annual_consumption_liters': annual_consumption_liters,
-            'water_treatment_factor': water_treatment_factor,
+            'annual_consumption_liters': metadata['annual_consumption_liters'],
+            'water_treatment_factor': metadata['water_treatment_factor'],
             **kwargs
         }
-    
+        self.emission_factor_service = EmissionFactorService()
+        
     def calculate_emissions(self, quantity: float = 1.0) -> float:
         """Calculate emissions for water consumption and treatment"""
         try:
@@ -37,16 +44,12 @@ class WaterComponent(Component):
     
     def _get_water_emission_factor(self) -> float:
         """Get emission factor for water treatment (kg CO₂e per liter)"""
-        # Emission factors for water treatment processes
-        treatment_factors = {
-            'standard': 0.0005,    # kg CO₂e per liter (standard treatment)
-            'advanced': 0.001,     # kg CO₂e per liter (advanced treatment)
-            'recycling': 0.0008,   # kg CO₂e per liter (water recycling)
-            'desalination': 0.003, # kg CO₂e per liter (desalination)
-        }
-        
-        treatment_type = self.parameters.get('treatment_type', 'standard')
-        return treatment_factors.get(treatment_type, 0.0005)
+        factors = self.emission_factor_service.get_emission_factors_by_name_and_category(self.metadata['treatment_type'], EmissionFactorCategory.MATERIAL)
+        if not factors:
+            raise ValueError(f"No emission factors found for {self.metadata['treatment_type']}")
+        if len(factors) > 1:
+            raise ValueError(f"Multiple emission factors found for {self.metadata['treatment_type']}")
+        return float(factors[0]['emission_factor'])
     
     def _calculate_pumping_emissions(self) -> float:
         """Calculate emissions from water pumping"""

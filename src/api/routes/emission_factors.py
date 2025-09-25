@@ -5,7 +5,7 @@ from src.core.models import (
     EmissionFactorUpdate,
     EmissionFactorCategory
 )
-from src.services.emmission_service import EmissionFactorService
+from src.services.emission_factor_service import EmissionFactorService
 
 router = APIRouter(prefix="/emission_factors", tags=["emission_factors"])
 emission_factor_service = EmissionFactorService()

@@ -57,7 +57,7 @@ class ComponentService:
         component_data = self.component_repo.get_by_id(component_id)
         if not component_data:
             raise ValueError(f"Component {component_id} not found")
-        
+
         component = self.factory.create_component(
             component_type=component_data['component_type'],
             name=component_data['name'],
@@ -90,11 +90,12 @@ class ComponentService:
             },
             ComponentType.MATERIAL: {
                 "description": "Building material",
-                "required_metadata": ["material_name", "density_kg_m3"],
+                "required_metadata": ["material_name", "density_kg_m3", "volume_m3"],
                 "optional_metadata": ["recycling_rate", "transport_distance_km"],
                 "example": {
                     "material_name": "concrete",
-                    "density_kg_m3": 2400
+                    "density_kg_m3": 2400,
+                    "volume_m3": 100
                 }
             },
             ComponentType.WATER: {

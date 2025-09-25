@@ -1,31 +1,11 @@
-from src.data.repositories import ComponentRepository, EmissionFactorRepository
-from src.core.factory import ComponentFactory
-from typing import List, Dict, Any, Optional
+from src.data.repositories import EmissionFactorRepository
+from typing import List, Dict, Any, Optional, List
 from src.core.models import (
     EmissionFactorCategory, 
     EmissionFactorCreate, 
     EmissionFactorResponse, 
-    EmissionFactorSearch, 
     EmissionFactorUpdate
 )
-
-class EmissionService:
-    def __init__(self):
-        self.component_repo = ComponentRepository()
-        self.factory = ComponentFactory()
-    
-    def calculate_component_emissions(self, component_id: str, quantity: float = 1.0) -> float:
-        """Calculate emissions for a single component"""
-        component_data = self.component_repo.get_by_id(component_id)
-        if not component_data:
-            raise ValueError(f"Component {component_id} not found")
-        
-        component = self.factory.create_component(
-            component_type=component_data['component_type'],
-            name=component_data['name'],
-            **component_data['parameters']
-        )
-        return component.calculate_emissions(quantity)
 
 class EmissionFactorService:
     def __init__(self):
@@ -46,6 +26,10 @@ class EmissionFactorService:
     def get_all_emission_factors(self) -> List[EmissionFactorResponse]:
         """Get all emission factors"""
         return self.emission_factor_repo.get_all()
+    
+    def get_emission_factors_by_name_and_category(self, name: str, category: EmissionFactorCategory) -> List[EmissionFactorResponse]:
+        """Get emission factors by category and source"""
+        return self.emission_factor_repo.get_by_name_and_category(name, category.value)
     
     def get_emission_factors_by_category(self, category: EmissionFactorCategory) -> List[EmissionFactorResponse]:
         """Get emission factors by category"""

@@ -149,6 +149,10 @@ class EmissionFactorRepository(BaseRepository):
     def get_by_category(self, category: str) -> List[EmissionFactorResponse]:
         """Get emission factors by category"""
         return self.db.select(self.table_name, {'category': category})
+
+    def get_by_name_and_category(self, name: str, category: str) -> List[EmissionFactorResponse]:
+        """Get emission factors by category and source"""
+        return self.db.select(self.table_name, {'name': name, 'category': category})
     
     def get_all(self) -> List[EmissionFactorResponse]:
         """Get all emission factors"""

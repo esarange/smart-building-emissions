@@ -104,7 +104,6 @@ class ComponentsByBuildingRepository(BaseRepository):
         return bool(result)
     
     def update_component_quantity(self, building_id: str, component_id: str, quantity: int) -> BuildingComponentUpdateResponse:
-        print(f"Updating component quantity for building {building_id} and component {component_id} to {quantity}")
         """Update the quantity of a component in a building"""
         join_record = self.db.select(self.table_name, {
             'building_id': building_id,

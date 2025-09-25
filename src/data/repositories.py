@@ -1,6 +1,20 @@
 from typing import List, Optional
 from .database import DatabaseHandler
-from src.core.models import BuildingComponentLink, BuildingCreate, BuildingResponse, BuildingComponentResponse, BuildingComponentUpdate, BuildingComponentUpdateResponse, ComponentResponse, ComponentCreate, ComponentUpdate
+from src.core.models import (
+    BuildingComponentLink, 
+    BuildingCreate, 
+    BuildingResponse, 
+    BuildingComponentResponse, 
+    BuildingComponentUpdate, 
+    BuildingComponentUpdateResponse, 
+    ComponentResponse, 
+    ComponentCreate, 
+    ComponentUpdate, 
+    EmissionFactorCreate, 
+    EmissionFactorResponse, 
+    EmissionFactorUpdate
+)
+from datetime import datetime
 
 class BaseRepository:
     def __init__(self, table_name: str):
@@ -114,3 +128,64 @@ class ComponentsByBuildingRepository(BaseRepository):
             raise ValueError("Component not found in building")
         
         return self.db.update(self.table_name, join_record[0]['id'], {'quantity': quantity})
+
+class EmissionFactorRepository(BaseRepository):
+    def __init__(self):
+        super().__init__('emission_factors')
+    
+    def create(self, factor_data: EmissionFactorCreate) -> EmissionFactorResponse:
+        """Create a new emission factor"""
+        # Add timestamp
+        factor_data['created_at'] = datetime.now().isoformat()
+        factor_data['updated_at'] = factor_data['created_at']
+        
+        return self.db.insert(self.table_name, factor_data)
+    
+    def get_by_id(self, factor_id: str) -> Optional[EmissionFactorResponse]:
+        """Get emission factor by ID"""
+        results = self.db.select(self.table_name, {'id': factor_id})
+        return results[0] if results else None
+    
+    def get_by_category(self, category: str) -> List[EmissionFactorResponse]:
+        """Get emission factors by category"""
+        return self.db.select(self.table_name, {'category': category})
+    
+    def get_all(self) -> List[EmissionFactorResponse]:
+        """Get all emission factors"""
+        return self.db.select(self.table_name)
+    
+    def update(self, factor_id: str, updates: EmissionFactorUpdate) -> EmissionFactorResponse:
+        """Update an emission factor"""
+        updates['updated_at'] = datetime.now().isoformat()
+        return self.db.update(self.table_name, factor_id, updates)
+    
+    def delete(self, factor_id: str) -> dict:
+        """Delete an emission factor"""
+        return self.db.delete(self.table_name, factor_id)
+    
+    def search(self, category: str = None, name_contains: str = None, 
+               min_factor: float = None, max_factor: float = None) -> List[EmissionFactorResponse]:
+        """Search emission factors with filters"""
+        all_factors = self.get_all()
+        results = []
+        
+        for factor in all_factors:
+            # Filter by category
+            if category and factor['category'] != category:
+                continue
+            
+            # Filter by name contains
+            if name_contains and name_contains.lower() not in factor['name'].lower():
+                continue
+            
+            # Filter by min factor
+            if min_factor is not None and factor['emission_factor'] < min_factor:
+                continue
+            
+            # Filter by max factor
+            if max_factor is not None and factor['emission_factor'] > max_factor:
+                continue
+            
+            results.append(factor)
+        
+        return results

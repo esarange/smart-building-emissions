@@ -67,3 +67,41 @@ class BuildingResponse(BuildingBase):
 class EmissionCalculationRequest(BaseModel):
     building_id: str
     modifications: Dict[str, Any] = {}
+
+class EmissionFactorCategory(str, Enum):
+    MATERIAL = "material"
+    ENERGY = "energy"
+    WATER = "water"
+    TRANSPORT = "transport"
+
+class EmissionFactorBase(BaseModel):
+    name: str
+    category: EmissionFactorCategory
+    emission_factor: float
+    unit: str
+    source: Optional[str] = None
+
+class EmissionFactorCreate(EmissionFactorBase):
+    pass
+
+class EmissionFactorUpdate(BaseModel):
+    name: Optional[str] = None
+    category: Optional[EmissionFactorCategory] = None
+    emission_factor: Optional[float] = None
+    unit: Optional[str] = None
+    source: Optional[str] = None
+    description: Optional[str] = None
+
+class EmissionFactorResponse(EmissionFactorBase):
+    id: int
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        from_attributes = True
+
+class EmissionFactorSearch(BaseModel):
+    category: Optional[EmissionFactorCategory] = None
+    name_contains: Optional[str] = None
+    min_factor: Optional[float] = None
+    max_factor: Optional[float] = None

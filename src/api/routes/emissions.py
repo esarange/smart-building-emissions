@@ -1,8 +1,8 @@
 from fastapi import APIRouter, HTTPException
-from src.core.models import BuildingCreate, BuildingResponse, EmissionCalculationRequest
+from src.core.models import EmissionCalculationRequest
 from src.services.building_service import BuildingService
 
-router = APIRouter(prefix="/buildings", tags=["buildings"])
+router = APIRouter(prefix="/building_emissions", tags=["building_emissions"])
 building_service = BuildingService()
 
 @router.post("/{building_id}/calculate", response_model=dict)

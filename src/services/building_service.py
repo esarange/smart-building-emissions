@@ -1,9 +1,20 @@
 
 from typing import List, Dict, Any
-from src.data.repositories import BuildingRepository, BuildingResponse, BuildingComponentResponse, BuildingComponentUpdateResponse, ComponentRepository, ComponentsByBuildingRepository
+from src.data.repositories import (
+    BuildingRepository, 
+    BuildingResponse, 
+    BuildingComponentResponse, 
+    BuildingComponentUpdateResponse, 
+    ComponentRepository, 
+    ComponentsByBuildingRepository
+)
 from src.core.building import Building
 from src.core.factory import ComponentFactory
-from src.core.models import BuildingComponentLink
+from src.core.models import (
+    BuildingComponentLink, 
+    BuildingResponse, 
+    BuildingComponentUpdateResponse
+)
 
 class BuildingService:
     def __init__(self):

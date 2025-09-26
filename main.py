@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from src.api.routes import buildings, components, emissions, emission_factors
+from src.api.routes import buildings, components, emission_factors
 
 app = FastAPI(
     title="Smart Building Emissions API",
@@ -20,7 +20,6 @@ app.add_middleware(
 # Include routers
 app.include_router(buildings.router)
 app.include_router(components.router)
-app.include_router(emissions.router)
 app.include_router(emission_factors.router)
 
 @app.get("/")

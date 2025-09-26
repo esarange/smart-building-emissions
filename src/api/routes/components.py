@@ -128,7 +128,7 @@ async def get_available_component_types():
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to get component types: {str(e)}")
 
-@router.post("/batch/calculate", response_model=dict)
+@router.post("/batch-calculate", response_model=dict)
 async def calculate_batch_emissions(components: List[dict]):
     """Calculate emissions for multiple components at once"""
     try:

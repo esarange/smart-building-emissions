@@ -36,7 +36,7 @@ class ComponentFactory:
     
     def _create_water_component(self, name: str, **metadata) -> WaterComponent:
         """Create a water component with validated metadata"""
-        required_params = ['annual_consumption_liters']
+        required_params = ['annual_consumption_liters', 'water_treatment_factor', 'treatment_type']
         self._validate_metadata(required_params, metadata['metadata'])
         
         return WaterComponent(name, **metadata)
@@ -70,10 +70,11 @@ class ComponentFactory:
             },
             'water': {
                 'description': 'Water consumption system',
-                'required_metadata': ['annual_consumption_liters'],
+                'required_metadata': ['annual_consumption_liters', 'water_treatment_factor', 'treatment_type'],
                 'example': {
                     'annual_consumption_liters': 100000,
-                    'water_treatment_factor': 0.8
+                    'water_treatment_factor': 0.8,
+                    'treatment_type': 'standard'
                 }
             }
         }

@@ -100,11 +100,12 @@ class ComponentService:
             },
             ComponentType.WATER: {
                 "description": "Water consumption system",
-                "required_metadata": ["annual_consumption_liters", "water_treatment_factor"],
+                "required_metadata": ["annual_consumption_liters", "water_treatment_factor", "treatment_type"],
                 "optional_metadata": ["recycling_rate", "efficiency"],
                 "example": {
                     "annual_consumption_liters": 100000,
-                    "water_treatment_factor": 0.8
+                    "water_treatment_factor": 0.8,
+                    "treatment_type": "standard"
                 }
             },
             ComponentType.TRANSPORT: {

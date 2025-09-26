@@ -65,8 +65,8 @@ class BuildingResponse(BuildingBase):
     created_at: datetime
 
 class EmissionCalculationRequest(BaseModel):
-    building_id: str
-    modifications: Dict[str, Any] = {}
+    # modifications: Dict[str, Any] = {}
+    pass
 
 class EmissionFactorCategory(str, Enum):
     MATERIAL = "material"
@@ -90,7 +90,6 @@ class EmissionFactorUpdate(BaseModel):
     emission_factor: Optional[float] = None
     unit: Optional[str] = None
     source: Optional[str] = None
-    description: Optional[str] = None
 
 class EmissionFactorResponse(EmissionFactorBase):
     id: int

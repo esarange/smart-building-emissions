@@ -64,10 +64,11 @@ class BuildingService:
         
         # Add components to building with their quantities
         for component_data in building_data.get('components', []):
+            print(f"Component data: {component_data}")
             component = self.factory.create_component(
-                component_type=component_data['component_type'],
-                name=component_data['name'],
-                **component_data['metadata']
+                component_type=component_data['components']['component_type'],
+                name=component_data['components']['name'],
+                metadata=component_data['components']['metadata']
             )
             # Use the quantity from the join table, default to 1.0
             quantity = component_data.get('quantity', 1)

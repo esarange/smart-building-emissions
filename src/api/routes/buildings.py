@@ -82,12 +82,12 @@ async def update_component_quantity(building_id: str, component_id: str, update:
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.post("/{building_id}/calculate", response_model=dict)
-async def calculate_emissions(building_id: str, request: EmissionCalculationRequest):
+async def calculate_emissions(building_id: str):
     """Calculate emissions for a building with optional real-time modifications"""
     try:
         results = building_service.calculate_building_emissions(
             building_id, 
-            request.modifications
+            {}
         )
         return results
     except ValueError as e:

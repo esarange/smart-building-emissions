@@ -43,6 +43,8 @@ class ComponentService:
         if 'name' in updates:
             update_data['name'] = updates['name']
 
+        updated_metadata = {**component['metadata'], **updates.get('metadata', {})}
+
         update_data['metadata'] = updated_metadata
         
         return self.component_repo.update(component_id, update_data)
